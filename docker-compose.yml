@@ -1,0 +1,40 @@
+version: "2"
+services:
+  batch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+          - version=1.0-SNAPSHOT
+    expose:
+      - 8080
+      - 8000
+    ports:
+      - 8080:8080
+      # debug port
+      - 8787:8787
+    environment:
+      # - DATASOURCE_URL=jdbc:postgresql://db:5432/camunda
+      - DATASOURCE_DB=db
+      - DATASOURCE_PORT=5432
+      - DATASOURCE_SCHEMA=camunda
+      - DATASOURCE_USERNAME=camunda
+      - DATASOURCE_PASSWORD=camunda
+      # Enables / disables remote debug on the server
+      - DEBUG=false
+    entrypoint:
+      - java
+      - -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8787
+      - -Xms4096m
+      - -Xmx4096m
+      - -jar
+      - offers-batch-settlement.jar
+  db:
+    hostname: db
+    image: sameersbn/postgresql:9.6-2
+    environment:
+      DB_NAME: camunda
+      DB_USER: camunda
+      DB_PASS: camunda
+    ports:
+      - 5432:5432

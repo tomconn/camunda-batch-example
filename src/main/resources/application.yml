@@ -1,0 +1,28 @@
+camunda.bpm:
+  admin-user:
+    id: tom
+    password: tom
+    firstName: tom
+  filter:
+    create: All tasks
+  # Disable the writing of the history data from processes that have completed
+  history-level: none
+  database:
+    schema-update: create-drop # true
+    type: postgres
+
+# Spring boot Datasource configuration to the main process engine
+spring.datasource:
+  url: "jdbc:postgresql://${DATASOURCE_DB:localhost}:${DATASOURCE_PORT:5432}/${DATASOURCE_SCHEMA:camunda}"
+  # url: ${DATASOURCE_URL:'jdbc:postgresql://localhost:5432/camunda'}
+  username: ${DATASOURCE_USERNAME:camunda}
+  password: ${DATASOURCE_PASSWORD:camunda}
+  driverClassName: org.postgresql.Driver
+
+server:
+  port: 8080
+
+constant:
+  batchSize: 1000
+  jobsPerSeed: 10
+  invocationsPerBatchJob: 200
