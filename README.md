@@ -60,25 +60,3 @@ curl -X POST \
 }
 '
 ```
-
-
-####  Send a message to kick off the batch process for all orders received
-```
-curl -X POST \
-  http://localhost:8080/rest/message \
-  -H 'Cache-Control: no-cache' \
-  -H 'Content-Type: application/json' \
-  -d '{
-  "messageName" : "Message_Batch_Start",
-  "businessKey" : "BatchKey",
-  "all" : true,
-  "correlationKeys" : {
-    "custId" : {"value" : 115, "type": "Long"}
-  }
-}'
-```
-
-
-
-
-
