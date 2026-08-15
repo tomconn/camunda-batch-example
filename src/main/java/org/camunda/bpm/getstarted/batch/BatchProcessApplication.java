@@ -24,11 +24,6 @@ public class BatchProcessApplication {
     }
 
     @Bean
-    public BatchJobHandler simpleCustomBatchJobHandler() {
-        return new BatchJobHandler();
-    }
-
-    @Bean
     public ProcessEnginePlugin customBatchHandlerPlugin(BatchJobHandler batchJobHandler) {
         return new CustomBatchHandlerPlugin(Collections.singletonList(batchJobHandler));
     }

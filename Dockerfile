@@ -1,4 +1,4 @@
-FROM amazoncorretto:8-alpine
+FROM amazoncorretto:17-alpine
 
 ARG version
 

@@ -6,67 +6,55 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <java.version>1.8</java.version>
-        <camunda.version>7.19.0</camunda.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <java.version>17</java.version>
+        <camunda.version>7.24.0</camunda.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Override the EOL Spring Boot 2.7.18 BOM's stale library versions
-                 with current patched (same-major, Java 8 compatible) releases.
-                 The spring-framework / jackson BOMs are imported BEFORE
-                 spring-boot-dependencies so their managed versions win for those
-                 module groups; the direct entries below override regardless of order. -->
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-framework-bom</artifactId>
-                <version>5.3.39</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
+            <!-- jackson-bom imported first so jackson modules win over the SB BOM's
+                 version. 2.21.5 patches the MODERATE @JsonView/@JsonIgnore/@JsonTypeInfo
+                 deserialization bypasses (GHSA-5gvw, 5jmj, mhm7) present in the BOM's 2.21.4. -->
             <dependency>
                 <groupId>com.fasterxml.jackson</groupId>
                 <artifactId>jackson-bom</artifactId>
-                <version>2.17.3</version>
+                <version>2.21.5</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!-- Import spring-framework-bom BEFORE spring-boot-dependencies so the
+                 managed Spring versions win for the spring-* module group. 6.2.19 is
+                 the final/latest 6.2.x and is the fix version for the Spring HIGHs
+                 (XSS, versioned-resources DoS, SpEL DoS at 6.2.19; annotation authz
+                 at 6.2.11; path traversal at 6.1.13/6.1.14). -->
             <dependency>
-                <groupId>org.yaml</groupId>
-                <artifactId>snakeyaml</artifactId>
-                <version>1.33</version>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>6.2.19</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
+            <!-- SB 3.5.16 BOM resolves commons-lang3 3.17.0, below the 3.18.0 fix for the
+                 uncontrolled-recursion MODERATE (GHSA-j288). -->
             <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.2.13</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.18.0</version>
             </dependency>
+            <!-- SB 3.5.16 BOM resolves log4j-api 2.24.3, below the 2.25.5 fix for the
+                 MapMessage non-finite-float MODERATE (GHSA-qv9r). Java 9+ bytecode, fine on
+                 the Java 17 runtime (the old Java-8 cap that blocked this bump is gone). -->
             <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>1.2.13</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-core</artifactId>
-                <version>9.0.118</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-el</artifactId>
-                <version>9.0.118</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-websocket</artifactId>
-                <version>9.0.118</version>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>2.25.5</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.7.18</version>
+                <version>3.5.16</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -78,41 +66,36 @@
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter</artifactId>
-            <version>7.19.0</version>
+            <version>${camunda.version}</version>
         </dependency>
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-            <version>7.19.0</version>
+            <version>${camunda.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
-            <version>7.19.0</version>
+            <version>${camunda.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.camunda.bpm</groupId>
             <artifactId>camunda-engine-plugin-connect</artifactId>
-            <version>7.19.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.camunda.connect</groupId>
-            <artifactId>camunda-connect-http-client</artifactId>
-            <version>1.5.6</version>
+            <version>${camunda.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.camunda.community.batch</groupId>
             <artifactId>camunda-platform-7-custom-batch-core</artifactId>
-            <version>1.18.1</version>
+            <version>1.20.1</version>
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.4.21</version>
+            <groupId>org.apache.groovy</groupId>
+            <artifactId>groovy-jsr223</artifactId>
+            <version>4.0.33</version>
         </dependency>
 
         <!-- Test DB -->
@@ -124,7 +107,7 @@
         </dependency>
 
         <!-- DataSource + connection pool (HikariCP) for Spring Boot auto-configuration.
-             Provides the DataSource/PlatformTransactionManager beans Camunda 7.19 wires in. -->
+             Provides the DataSource/PlatformTransactionManager beans Camunda wires in. -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -134,36 +117,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.7.7</version>
-            <!-- <version>9.4.1212</version>-->
-        </dependency>
-
-        <!-- Pinned patched versions of transitive libraries the EOL Spring Boot
-             2.7.18 BOM leaves stale (CVE fixes; same-major, Java 8 compatible). -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.18.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.18.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.11.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>3.5.16</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.6.0</version>
+            <version>42.7.13</version>
         </dependency>
 
     </dependencies>
@@ -173,10 +127,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>2.7.18</version>
-                <configuration>
-                    <layout>ZIP</layout>
-                </configuration>
+                <version>3.5.16</version>
                 <executions>
                     <execution>
                         <goals>

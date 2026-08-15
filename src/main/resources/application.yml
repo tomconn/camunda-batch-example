@@ -7,6 +7,13 @@ camunda.bpm:
     create: All tasks
   # Disable the writing of the history data from processes that have completed
   history-level: none
+  # Camunda 7.20+ enforces a non-null historyTimeToLive at deploy time
+  # (ENGINE-12018). Provide a default so the BPMN models deploy without each
+  # model declaring camunda:historyTimeToLive. Harmless with history-level: none
+  # (history cleanup never runs).
+  generic-properties:
+    properties:
+      historyTimeToLive: P30D
   database:
     schema-update: create-drop # true
     type: postgres
