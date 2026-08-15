@@ -9,7 +9,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <java.version>1.8</java.version>
-        <camunda.version>7.7.0</camunda.version>
+        <camunda.version>7.19.0</camunda.version>
     </properties>
 
     <dependencyManagement>
@@ -17,7 +17,7 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>1.5.8.RELEASE</version>
+                <version>2.7.18</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -29,24 +29,24 @@
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter</artifactId>
-            <version>2.3.0</version>
+            <version>7.19.0</version>
         </dependency>
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
-            <version>2.3.0</version>
+            <version>7.19.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.camunda.bpm.springboot</groupId>
             <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
-            <version>2.3.0</version>
+            <version>7.19.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.camunda.bpm</groupId>
             <artifactId>camunda-engine-plugin-connect</artifactId>
-            <version>7.8.0</version>
+            <version>7.19.0</version>
         </dependency>
         <dependency>
             <groupId>org.camunda.connect</groupId>
@@ -55,14 +55,15 @@
         </dependency>
 
         <dependency>
-            <groupId>org.camunda.bpm.extension.batch</groupId>
-            <artifactId>camunda-bpm-custom-batch-core</artifactId>
-            <version>1.1.0</version>
+            <groupId>org.camunda.community.batch</groupId>
+            <artifactId>camunda-platform-7-custom-batch-core</artifactId>
+            <version>1.18.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
+            <version>2.4.12</version>
         </dependency>
 
         <!-- Test DB -->
@@ -72,24 +73,19 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- DataSource + connection pool (HikariCP) for Spring Boot auto-configuration.
+             Provides the DataSource/PlatformTransactionManager beans Camunda 7.19 wires in. -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
         <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.1</version>
+            <version>42.7.7</version>
             <!-- <version>9.4.1212</version>-->
-        </dependency>
-
-        <dependency>
-            <groupId>org.camunda.bpm</groupId>
-            <artifactId>camunda-engine-plugin-spin</artifactId>
-            <version>7.8.0-alpha1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.camunda.spin</groupId>
-            <artifactId>camunda-spin-dataformat-json-jackson</artifactId>
-            <version>1.4.2</version>
         </dependency>
 
     </dependencies>
@@ -99,6 +95,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.7.18</version>
                 <configuration>
                     <layout>ZIP</layout>
                 </configuration>

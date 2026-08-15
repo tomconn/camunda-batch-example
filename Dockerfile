@@ -1,4 +1,4 @@
-FROM library/java:8-jre-alpine
+FROM amazoncorretto:8-alpine
 
 ARG version
 
@@ -7,18 +7,11 @@ WORKDIR /opt/camunda
 ADD target/offers-batch-settlement-${version}.jar offers-batch-settlement.jar
 COPY entrypoint.sh .
 
-# install bash, python, pip and sb cloud tools.
-# add camunda group and user and change ownership of the camunda jar.
-# TODO: consider including bash, curl  and python inside the FROM docker image?
-# TODO: the url to the sb-cloud-user-tools will eventually change
-# TODO: pyyaml will be install via the sb-cloud-user-tools in future version
+# install bash (for the entrypoint script) and curl (for healthchecks).
+# add a non-root camunda user and change ownership of the camunda jar.
 RUN apk --no-cache add \
     bash \
-    curl \
-    python \
-    py-pip && \
-    pip install --upgrade pip && \
-    pip install pyyaml && \
+    curl && \
     addgroup -S camunda && \
     adduser -S -G camunda camunda && \
     chown -R camunda:camunda . && \

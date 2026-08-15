@@ -1,6 +1,6 @@
 package org.camunda.bpm.getstarted.batch;
 
-import org.camunda.bpm.extension.batch.CustomBatchBuilder;
+import org.camunda.community.batch.CustomBatchBuilder;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 import org.springframework.beans.factory.annotation.Value;

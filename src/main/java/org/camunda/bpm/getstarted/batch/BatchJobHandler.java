@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import org.camunda.bpm.engine.impl.interceptor.CommandContext;
-import org.camunda.bpm.extension.batch.CustomBatchJobHandler;
+import org.camunda.community.batch.CustomBatchJobHandler;
 import org.springframework.stereotype.Component;
 
 @Component
